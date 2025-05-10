@@ -1,0 +1,9 @@
+ipykernel
+pandas[excel]
+pyarrow
+numpy
+matplotlib
+scikit-learn
+luigi
+tornado
+sqlalchemy
