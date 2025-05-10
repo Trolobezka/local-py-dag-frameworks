@@ -22,6 +22,8 @@ First terminal:
 luigid
 ```
 
+Open [http://localhost:8082](http://localhost:8082).
+
 Second terminal:
 ```
 luigi --module tasks LinearRegression --method drop
