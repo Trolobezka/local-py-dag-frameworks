@@ -1,0 +1,8 @@
+ipykernel
+pandas[excel]
+pyarrow
+numpy
+matplotlib
+scikit-learn
+dagster
+dagster-webserver
