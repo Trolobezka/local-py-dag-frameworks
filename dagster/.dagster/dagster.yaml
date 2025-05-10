@@ -1,0 +1,15 @@
+telemetry:
+  enabled: false
+
+backfills:
+  use_threads: true
+  num_workers: 4
+
+run_coordinator:
+  module: dagster.core.run_coordinator
+  class: QueuedRunCoordinator
+  config:
+    max_concurrent_runs: 4
+    tag_concurrency_limits:
+      - key: "dagster/backfill"
+        limit: 4
