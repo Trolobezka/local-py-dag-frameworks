@@ -7,7 +7,7 @@ python -m pip install --upgrade pip
 pip install -r ./requirements.txt
 ```
 
-Change path to the `.dagster` folder in the `.env` file to your own absolute path.
+Change path to the [.dagster](.dagster) folder in the `.env` file to your own absolute path.
 
 # Run
 
