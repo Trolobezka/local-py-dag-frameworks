@@ -1,0 +1,51 @@
+dates = glob_wildcards("data/raw/{date}.xlsx").date
+
+
+rule all:
+    input:
+        # Convert all excel files to parquet files
+        # expand("data/interim/{date}.parquet", date=dates),
+        # Concatenate all parquet files into one
+        # "data/interim/concat.parquet",
+        # Clean the concatenated data with different methods
+        # expand("data/processed/clean_{method}.parquet", method=["drop", "impute"]),
+        # Train linear regression models on differently cleaned data
+        expand("models/linear_regression_{method}.pkl", method=["drop", "impute"]),
+
+
+rule convert_data:
+    input:
+        "data/raw/{date}.xlsx",
+    output:
+        "data/interim/{date}.parquet",
+    script:
+        "scripts/convert_data.py"
+
+
+rule concat_data:
+    input:
+        expand(rules.convert_data.output, date=dates),
+    output:
+        "data/interim/concat.parquet",
+    script:
+        "scripts/concat_data.py"
+
+
+rule clean_data:
+    input:
+        rules.concat_data.output,
+    output:
+        "data/processed/clean_{method}.parquet",
+    params:
+        threshold=0.2,
+    script:
+        "scripts/clean_data.py"
+
+
+rule linear_regression:
+    input:
+        rules.clean_data.output,
+    output:
+        "models/linear_regression_{method}.pkl",
+    script:
+        "scripts/linear_regression.py"

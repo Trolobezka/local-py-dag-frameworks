@@ -1,0 +1,4 @@
+.snakemake
+*.dot
+*.svg
+*.pdf
