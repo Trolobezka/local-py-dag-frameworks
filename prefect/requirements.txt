@@ -1,0 +1,7 @@
+ipykernel
+pandas[excel]
+pyarrow
+numpy
+matplotlib
+scikit-learn
+prefect
