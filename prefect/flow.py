@@ -5,10 +5,12 @@ from pathlib import Path
 import pandas
 
 import prefect
+import prefect.artifacts
 from helpers import (
     BYTES,
     MTIME,
     CleanDataMethod,
+    add_table_to_artifact,
     drop_columns_with_missing_values,
     fit_linear_model,
     impute_columns_with_mean,
@@ -24,11 +26,10 @@ MODELS_DIR = ROOT / "models"
 
 @prefect.task(cache_policy=INPUTS + TASK_SOURCE + MTIME + BYTES)
 def convert(input_path: Path) -> Path:
-    """Convert"""
-    pass
-    dataframe = pandas.read_excel(input_path)
+    data = pandas.read_excel(input_path)
     output_path = INTERIM_DIR / f"{input_path.stem}.parquet"
-    dataframe.to_parquet(output_path)
+    data.to_parquet(output_path)
+    add_table_to_artifact(data, key="table")
     return output_path
 
 
@@ -36,7 +37,9 @@ def convert(input_path: Path) -> Path:
 def concat(input_paths: list[Path]) -> Path:
     dataframes = [pandas.read_parquet(path) for path in input_paths]
     output_path = INTERIM_DIR / "concat.parquet"
-    pandas.concat(dataframes).reset_index(drop=True).to_parquet(output_path)
+    concat = pandas.concat(dataframes).reset_index(drop=True)
+    concat.to_parquet(output_path)
+    add_table_to_artifact(concat, key="table")
     return output_path
 
 
@@ -51,18 +54,23 @@ def clean(input_path: Path, method: CleanDataMethod) -> Path:
         raise NotImplementedError(f"Unknown method: '{self.method}'")
     output_path = PROCESSED_DIR / f"clean_{method.name}.parquet"
     clean.to_parquet(output_path)
+    add_table_to_artifact(clean, key=f"table-{method.name}")
     return output_path
 
 
 @prefect.task(cache_policy=INPUTS + TASK_SOURCE + MTIME + BYTES)
 def linear_regression(input_path: Path, method: CleanDataMethod) -> Path:
     data = pandas.read_parquet(input_path)
-    model, _ = fit_linear_model(
+    model, r2_adj = fit_linear_model(
         X=data.drop(columns=data.columns[0]),
         y=data.drop(columns=data.columns[1:]),
     )
     output_path = MODELS_DIR / f"linear_model_{method.name}.pkl"
     output_path.write_bytes(pickle.dumps(model))
+    prefect.artifacts.create_markdown_artifact(
+        f"Adjusted R2: {r2_adj:.3f}",
+        key=f"metric-{method.name}",
+    )
     return output_path
 
 

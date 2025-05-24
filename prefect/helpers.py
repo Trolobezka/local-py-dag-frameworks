@@ -7,6 +7,7 @@ import sklearn.linear_model
 import sklearn.metrics
 
 import prefect
+import prefect.artifacts
 import prefect.cache_policies
 import prefect.context
 
@@ -60,6 +61,18 @@ def hash_bytes(context: prefect.context.TaskRunContext, parameters: dict[str, ob
 
 MTIME = prefect.cache_policies.CachePolicy.from_cache_key_fn(hash_mtime)
 BYTES = prefect.cache_policies.CachePolicy.from_cache_key_fn(hash_bytes)
+
+
+def add_table_to_artifact(
+    table: pandas.DataFrame,
+    key: str | None = None,
+    description: str | None = None,
+) -> None:
+    prefect.artifacts.create_table_artifact(
+        table.to_dict("records"),  # type: ignore
+        key=key,
+        description=description,
+    )
 
 
 class CleanDataMethod(enum.Enum):
