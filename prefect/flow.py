@@ -51,7 +51,7 @@ def clean(input_path: Path, method: CleanDataMethod) -> Path:
     elif method == CleanDataMethod.impute:
         clean = impute_columns_with_mean(concat)
     else:
-        raise NotImplementedError(f"Unknown method: '{self.method}'")
+        raise NotImplementedError(f"Unknown method: {method}")
     output_path = PROCESSED_DIR / f"clean_{method.name}.parquet"
     clean.to_parquet(output_path)
     add_table_to_artifact(clean, key=f"table-{method.name}")
