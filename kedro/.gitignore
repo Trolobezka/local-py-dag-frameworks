@@ -1,0 +1,3 @@
+.viz/*
+!.viz/.gitkeep
+*.egg-info
