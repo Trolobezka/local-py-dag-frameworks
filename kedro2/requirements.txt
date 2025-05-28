@@ -6,3 +6,10 @@ kedro[jupyter]~=0.19.13
 notebook
 scikit-learn~=1.5.1
 seaborn~=0.12.1
+
+ipykernel
+pandas[excel]
+pyarrow
+numpy
+matplotlib
+-e .

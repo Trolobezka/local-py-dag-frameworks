@@ -1,0 +1,23 @@
+raw_data_points:
+  type: partitions.PartitionedDataset
+  path: data/raw/
+  dataset: pandas.ExcelDataset
+  filename_suffix: .xlsx
+
+data_points:
+  type: partitions.PartitionedDataset
+  path: data/interim/
+  dataset: pandas.ParquetDataset
+  filename_suffix: .parquet
+
+concat_data:
+  type: pandas.ParquetDataset
+  filepath: data/interim/concat.parquet
+
+"clean_{method}_data":
+  type: pandas.ParquetDataset
+  filepath: "data/processed/clean_{method}.parquet"
+
+"linear_regression_{method}_model":
+  type: pickle.PickleDataset
+  filepath: "models/linear_regression_{method}.pkl"

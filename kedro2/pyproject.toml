@@ -1,33 +1,31 @@
 [build-system]
-requires = [ "setuptools",]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-requires-python = ">=3.9"
+requires-python = ">=3.11,<3.12"
 name = "project"
+version = "1.0.0"
 readme = "README.md"
-dynamic = [ "version",]
-dependencies = [ "ipython>=8.10", "jupyterlab>=3.0", "notebook", "kedro[jupyter]~=0.19.13", "kedro-datasets[pandas-csvdataset, pandas-exceldataset, pandas-parquetdataset, plotly-plotlydataset, plotly-jsondataset, matplotlib-matplotlibwriter]>=3.0", "kedro-viz>=6.7.0", "scikit-learn~=1.5.1", "seaborn~=0.12.1",]
-
-[project.scripts]
-project = "project.__main__:main"
+dependencies = [
+    "ipython>=8.10",
+    "jupyterlab>=3.0",
+    "notebook",
+    "kedro[jupyter]~=0.19.13",
+    "kedro-datasets[pandas-csvdataset, pandas-exceldataset, pandas-parquetdataset, plotly-plotlydataset, plotly-jsondataset, matplotlib-matplotlibwriter]>=3.0",
+    "kedro-viz>=6.7.0",
+    "scikit-learn~=1.5.1",
+    "seaborn~=0.12.1",
+]
 
 [tool.kedro]
 package_name = "project"
 project_name = "project"
 kedro_init_version = "0.19.13"
-tools = "['Data Structure']"
-example_pipeline = "True"
+tools = "[]"
+example_pipeline = "False"
 source_dir = "src"
 
-[project.entry-points."kedro.hooks"]
-
-[tool.setuptools.dynamic.version]
-attr = "project.__version__"
-
 [tool.setuptools.packages.find]
-where = [ "src",]
+where = ["src"]
 namespaces = false
-
-[tool.kedro_telemetry]
-project_id = "6b79581786ff4e45973024ae2d18e4c7"
