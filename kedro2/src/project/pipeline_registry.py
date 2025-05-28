@@ -6,6 +6,8 @@ import kedro.pipeline
 import pandas
 import sklearn.linear_model
 
+from .helpers import drop_columns_with_missing_values, fit_linear_model, impute_columns_with_mean
+
 LoaderType = typing.Callable[[], pandas.DataFrame]
 logger = logging.getLogger(__name__)
 date_regex = re.compile(r"\d{4}-\d{2}-\d{2}")
@@ -24,9 +26,6 @@ def concat(data: dict[str, LoaderType]) -> pandas.DataFrame:
     logger.info(f"Concatenating files: {valid_names}")
     dfs = [data[name]() for name in valid_names]
     return pandas.concat(dfs).reset_index(drop=True)
-
-
-from .helpers import drop_columns_with_missing_values, fit_linear_model, impute_columns_with_mean
 
 
 def clean(concat: pandas.DataFrame, method: str) -> pandas.DataFrame:
