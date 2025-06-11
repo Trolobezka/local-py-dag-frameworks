@@ -12,7 +12,7 @@ Change path to the [.dagster](.dagster) folder in the `.env` file to your own ab
 # Run
 
 ```
-dagster dev -f .\assets.py
+dagster dev -f ./assets.py
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
